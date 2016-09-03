@@ -35,6 +35,12 @@ app.get('/', stormpath.getUser, function(request, response) {
 	}
 });
 
+app.get('/createPoll', function(request, response) {
+});
+
+app.get('/myPolls', function(request, response) {
+});
+
 app.on('stormpath.ready', function() {
   app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
