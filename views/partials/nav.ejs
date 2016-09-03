@@ -1,0 +1,31 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <a class="navbar-brand" href="/">FCC-Voting-App</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+      <form action="/logout" method="post" id="my_form">
+        <ul class="nav navbar-nav navbar-right">
+          <% if (user != null) { %>
+          <li><a href="/myPolls">My Polls</a></li>
+          <li><a href="/createPoll">Create Poll</a></li>
+            <li id="logoutLink">
+              <a href="javascript:{}" onclick="document.getElementById('my_form').submit(); return false;">Sign Out</a>
+            </li>
+          <% } else { %>
+            <li id="loginLink"><a href="/login">Sign In/Create Account</a></li>
+          <% }%>
+        </ul>
+      </div>
+      </form>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </nav>
+  

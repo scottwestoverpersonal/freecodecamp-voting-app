@@ -1,0 +1,28 @@
+{
+  "name": "fcc-voting-app",
+  "version": "0.2.5",
+  "description": "A Node.js app that allows you to see and vote on polls.",
+  "engines": {
+    "node": "5.9.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ejs": "2.4.1",
+    "express": "4.13.3",
+    "express-stormpath": "^3.1.2",
+    "mongodb": "^2.2.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroku/node-js-getting-started"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
+}
