@@ -5,16 +5,16 @@ var ObjectId = require('mongodb').ObjectID;
 var stormpath = require('express-stormpath');
 var app = express();
 
-var mongoURL = 'mongodb://heroku_l3pfq0ph:l215nl855l3tvhho546n3qaa45@ds019956.mlab.com:19956/heroku_l3pfq0ph';
+var mongoURL = '';
 
 app.use(stormpath.init(app, {
   website: true,
     apiKey: {
-      id: '6KHL8NJRW4PH7JO9GOWTE1CTE', 
-      secret: 'D/tLZdpJ6kz3Uv16j89B7DFGXyo6WOvCCtZgfenC2QE'
+      id: '', 
+      secret: ''
     },
  application: {
-   href: 'https://api.stormpath.com/v1/applications/fxXOhZdGVsSBN9NhV5AYd',
+   href: '',
  }
 }));
 
