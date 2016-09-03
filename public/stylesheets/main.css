@@ -32,3 +32,19 @@ body {
   padding: 5px;
 }
 }
+
+.pollItem {
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #CCCCCC;
+  border-radius: 25px;
+  text-align: center;
+}
+
+.pollItem:hover { 
+    background-color: #DDDDDD;
+}
+
+#pollData{
+    text-align: center;
+}

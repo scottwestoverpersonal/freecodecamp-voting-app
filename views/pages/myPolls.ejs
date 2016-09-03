@@ -11,22 +11,16 @@
 
   <!-- Begin Container -->
 <div class="container" id="pollData">
+  <h2>My Polls</2>
 </div>
   <!-- /.container -->
   
     <script>
   $.ajax({
     type: 'GET',
-    url: '/getPolls',
+    url: '/getMyPolls',
     success: function(data) {
-        for(var i = 0; i < data.polls.length; i++){
-          var html = '<div class="row pollItem">';
-          html += '<a href="/singlePoll?id='+data.polls[i]._id+'">';
-          html += data.polls[i].question;
-          html += '</a>';
-          html += '</div';
-          $('#pollData').append(html);
-        }
+        console.log(data);
     }
   });
   </script>
