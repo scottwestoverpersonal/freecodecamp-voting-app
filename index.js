@@ -48,6 +48,17 @@ app.get('/createPoll', stormpath.loginRequired, function(request, response) {
   response.render('pages/createPoll',{ user : request.user.email });
 });
 
+app.get('/deletePoll', stormpath.loginRequired, function(req, res) {
+      var id = req.query.id;
+    MongoClient.connect(mongoURL, function(err, db) {
+        assert.equal(null, err);
+        deletePoll(db, function() {
+            db.close();
+            res.redirect("/");
+        }, id);
+    });
+});
+
 app.get('/myPolls', stormpath.loginRequired, function(request, response) {
   response.render('pages/myPolls',{ user : request.user.email });
 });
@@ -151,4 +162,15 @@ var findUserPolls = function(db, callback, username) {
          callback(polls);
       }
    });
+};
+
+//delete poll
+var deletePoll = function(db, callback, id) {
+   db.collection('polls').deleteMany(
+      {_id: new ObjectId(id)},
+      function(err, results) {
+         //console.log(results);
+         callback();
+      }
+   );
 };

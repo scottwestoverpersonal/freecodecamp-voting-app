@@ -11,7 +11,8 @@
 
   <!-- Begin Container -->
 <div class="container" id="pollData">
-  <h2>My Polls</2>
+  <h2>My Polls</h2>
+  <p>Click on one of your polls below to view the results.</p>
 </div>
   <!-- /.container -->
   
@@ -21,6 +22,14 @@
     url: '/getMyPolls',
     success: function(data) {
         console.log(data);
+         for(var i = 0; i < data.polls.length; i++){
+          var html = '<div class="row pollItem">';
+          html += '<a href="/singlePoll?id='+data.polls[i]._id+'">';
+          html += data.polls[i].question;
+          html += '</a>';
+          html += '</div';
+          $('#pollData').append(html);
+        }
     }
   });
   </script>

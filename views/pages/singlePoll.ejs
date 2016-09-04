@@ -2,37 +2,108 @@
 <html>
 
 <head>
-  <% include ../partials/header.ejs %>
+    <% include ../partials/header.ejs %>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body>
-  <% include ../partials/nav.ejs %>
-  <br>
+    <% include ../partials/nav.ejs %>
+        <br>
+        <!-- Begin Container -->
+        <div class="container" id="pollData">
+            <h2 id="qid"></h2>
+            <p id="qid2">No votes for this poll yet.</p>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="sel1">Vote:</label>
+                        <select class="form-control" id="sel1">
+								<option>Choose an answer</option>
+							</select>
+                    </div>
+                    <div id="voteLink"><a href="#" class="btn btn-info">Vote</a></div><br>
+                    <div id="delLink"></div>
+                </div>
+                <div class="col-sm-8">
+                    <div id="piechart" style="width: 600px; height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+        <script>
+        var myVar = <%- JSON.stringify(user) %>;
+            $('#qid2').hide();
+             $('#delLink').hide();
+            var pollID = getQueryVariable("id");
+            $.ajax({
+                type: 'GET',
+                url: '/getSinglePoll?id=' + pollID,
+                success: function(dataP) {
+                    console.log(dataP);
+                    if(dataP.poll.user === myVar) {
+                      $('#delLink').html('<a href="/deletePoll?id='+dataP.poll._id+'" class="btn btn-danger">Delete</a>');
+                      $('#delLink').show();
+                    }
+                    var tempAnswers = [
+                        ['Answer', 'Votes']
+                    ];
+                    var options2 = [];
+                    var noData = true;
+                    for (var i = 0; i < dataP.poll.answers.length; i++) {
+                        tempAnswers.push([dataP.poll.answers[i].answer, dataP.poll.answers[i].total]);
+                        if (dataP.poll.answers[i].total > 0) {
+                            noData = false;
+                        }
+                        options2.push(dataP.poll.answers[i].answer);
+                    }
+                    google.charts.load('current', {
+                        'packages': ['corechart']
+                    });
+                    google.charts.setOnLoadCallback(drawChart);
 
-  <!-- Begin Container -->
-<div class="container" id="pollData">
-</div>
-  <!-- /.container -->
-  
-    <script>
-    var pollID = getQueryVariable("id");
-  $.ajax({
-    type: 'GET',
-    url: '/getSinglePoll?id='+pollID,
-    success: function(data) {
-        console.log(data);
-    }
-  });
-      function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
-}
-  </script>
+                    function drawChart() {
+
+                        var data = google.visualization.arrayToDataTable(tempAnswers);
+
+                        var options = {
+                            title: dataP.poll.question
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+                        chart.draw(data, options);
+                        if (noData) {
+                            $('#piechart').hide();
+                            $('#qid').html(dataP.poll.question);
+                            $('#qid2').show();
+
+                        }
+
+                        var select = document.getElementById("sel1");
+                        for (var i = 0; i < options2.length; i++) {
+                            var opt = options2[i];
+                            var el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            select.appendChild(el);
+                        }
+                    }
+                }
+            });
+
+            function getQueryVariable(variable) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i = 0; i <
+                    vars.length; i++) {
+                    var pair = vars[i].split("=");
+                    if (pair[0] == variable) {
+                        return pair[1];
+                    }
+                }
+                return (false);
+            }
+        </script>
 </body>
+
 </html>
