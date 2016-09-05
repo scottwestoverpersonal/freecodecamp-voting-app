@@ -4,6 +4,7 @@
 <head>
     <% include ../partials/header.ejs %>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -23,7 +24,8 @@
                     </div>
                     <div id="newans2" style="display: none;">Enter new answer:<input type="text" id="newans"></div><br>
                     <div id="voteLink" style="display: none;"><a href="#" class="btn btn-info" onclick="voted();">Vote</a></div><br>
-                    <div id="delLink" style="display: none;"></div>
+                    <div id="delLink" style="display: none;"></div><br>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-text="Check out this poll here:" data-show-count="false">Tweet</a>
                 </div>
                 <div class="col-sm-8">
                     <div id="piechart" style="width: 600px; height: 500px;"></div>
@@ -43,7 +45,7 @@
                 type: 'GET',
                 url: '/getSinglePoll?id=' + pollID,
                 success: function(dataP) {
-                    console.log(dataP);
+                    //console.log(dataP);
                     datapoints = dataP;
                     if(dataP.poll.user === myVar) {
                       $('#delLink').html('<a href="/deletePoll?id='+dataP.poll._id+'" class="btn btn-danger">Delete</a>');
@@ -74,7 +76,8 @@
                         var data = google.visualization.arrayToDataTable(tempAnswers);
 
                         var options = {
-                            title: dataP.poll.question
+                            title: dataP.poll.question,
+                             pieSliceText: 'value-and-percentage'
                         };
 
                         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -129,14 +132,34 @@
             });
             function voted() {
                 if($( "#sel1" ).val() === "new option"){
-                    datapoints.poll.answers.push({"answer":$( "#newans" ).val(),"total":0});
+                    datapoints.poll.answers.push({"answer":$( "#newans" ).val(),"total":1});
+                    $.ajax({
+                        type: 'POST',
+                        url: '/updatePoll',
+                        contentType: 'application/json',
+                        data: JSON.stringify(datapoints),
+                        success: function(data) {
+                            //console.log(data);
+                            location.reload();
+                        }
+                    });
                 }
                 else {
-                for(var i = 0; i < datapoints.poll.answers.length; i++){
-                    if(datapoints.poll.answers[i].answer === $( "#sel1" ).val()){
-                        datapoints.poll.answers[i].total++;
+                    for(var i = 0; i < datapoints.poll.answers.length; i++){
+                        if(datapoints.poll.answers[i].answer === $( "#sel1" ).val()){
+                            datapoints.poll.answers[i].total++;
+                        }
                     }
-                }
+                    $.ajax({
+                        type: 'POST',
+                        url: '/updatePoll',
+                        contentType: 'application/json',
+                        data: JSON.stringify(datapoints),
+                        success: function(data) {
+                            //console.log(data);
+                            location.reload();
+                        }
+                    });
                 }
             }
         </script>

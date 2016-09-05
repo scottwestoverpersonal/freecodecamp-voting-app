@@ -4,6 +4,8 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var stormpath = require('express-stormpath');
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 var mongoURL = '';
 
@@ -86,16 +88,13 @@ app.get('/getPolls', function(req, res){
 });
 
 //update poll results
-app.get('/updatePoll', function(req, res){
-    console.log(req.query.answers);
-    console.log(req.query.ans);
-    
-  MongoClient.connect(mongoURL, function(err, db) {
+app.post('/updatePoll', function(req, res){
+      MongoClient.connect(mongoURL, function(err, db) {
     assert.equal(null, err);
     updateTotals(db, function() {
         db.close();
         res.json({"updated":"true"});
-    }, req.query.id, req.query.choice, req.query.answers);
+    }, req.body);
   });
 });
 
@@ -190,11 +189,11 @@ var deletePoll = function(db, callback, id) {
 };
 
 // update the record
-var updateTotals = function(db, callback, id, ans, answers) {
-   db.collection('bars').updateOne(
-      {_id: new ObjectId(id)},
+var updateTotals = function(db, callback, pollData) {
+   db.collection('polls').updateOne(
+      {_id: new ObjectId(pollData.poll._id)},
       {
-        $set: {"total" : parseInt(total)}
+        $set: {"answers" : pollData.poll.answers}
       }, {upsert:true}, function(err, results) {
       //console.log(results);
       callback();
