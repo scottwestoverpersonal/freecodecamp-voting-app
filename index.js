@@ -85,6 +85,20 @@ app.get('/getPolls', function(req, res){
   });
 });
 
+//update poll results
+app.get('/updatePoll', function(req, res){
+    console.log(req.query.answers);
+    console.log(req.query.ans);
+    
+  MongoClient.connect(mongoURL, function(err, db) {
+    assert.equal(null, err);
+    updateTotals(db, function() {
+        db.close();
+        res.json({"updated":"true"});
+    }, req.query.id, req.query.choice, req.query.answers);
+  });
+});
+
 // get a single poll
 app.get('/getSinglePoll', function(req, res){
   MongoClient.connect(mongoURL, function(err, db) {
@@ -173,4 +187,16 @@ var deletePoll = function(db, callback, id) {
          callback();
       }
    );
+};
+
+// update the record
+var updateTotals = function(db, callback, id, ans, answers) {
+   db.collection('bars').updateOne(
+      {_id: new ObjectId(id)},
+      {
+        $set: {"total" : parseInt(total)}
+      }, {upsert:true}, function(err, results) {
+      //console.log(results);
+      callback();
+   });
 };

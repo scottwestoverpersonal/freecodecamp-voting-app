@@ -21,8 +21,9 @@
 								<option>Choose an answer</option>
 							</select>
                     </div>
-                    <div id="voteLink"><a href="#" class="btn btn-info">Vote</a></div><br>
-                    <div id="delLink"></div>
+                    <div id="newans2" style="display: none;">Enter new answer:<input type="text" id="newans"></div><br>
+                    <div id="voteLink" style="display: none;"><a href="#" class="btn btn-info" onclick="voted();">Vote</a></div><br>
+                    <div id="delLink" style="display: none;"></div>
                 </div>
                 <div class="col-sm-8">
                     <div id="piechart" style="width: 600px; height: 500px;"></div>
@@ -32,7 +33,10 @@
         <!-- /.container -->
         <script>
         var myVar = <%- JSON.stringify(user) %>;
+        var datapoints;
+            $('#newans2').hide();
             $('#qid2').hide();
+            $('#voteLink').hide();
              $('#delLink').hide();
             var pollID = getQueryVariable("id");
             $.ajax({
@@ -40,6 +44,7 @@
                 url: '/getSinglePoll?id=' + pollID,
                 success: function(dataP) {
                     console.log(dataP);
+                    datapoints = dataP;
                     if(dataP.poll.user === myVar) {
                       $('#delLink').html('<a href="/deletePoll?id='+dataP.poll._id+'" class="btn btn-danger">Delete</a>');
                       $('#delLink').show();
@@ -55,6 +60,9 @@
                             noData = false;
                         }
                         options2.push(dataP.poll.answers[i].answer);
+                    }
+                    if(myVar != null){
+                        options2.push("new option");
                     }
                     google.charts.load('current', {
                         'packages': ['corechart']
@@ -102,6 +110,34 @@
                     }
                 }
                 return (false);
+            }
+            
+            $( "#sel1" ).change(function() {
+                var tempVal = this.value;
+                if(tempVal === "Choose an answer"){
+                  $('#voteLink').hide();
+                }
+                else {
+                    $('#voteLink').show();
+                }
+                if(tempVal === "new option"){
+                    $('#newans2').show();
+                }
+                else{
+                    $('#newans2').hide();
+                }
+            });
+            function voted() {
+                if($( "#sel1" ).val() === "new option"){
+                    datapoints.poll.answers.push({"answer":$( "#newans" ).val(),"total":0});
+                }
+                else {
+                for(var i = 0; i < datapoints.poll.answers.length; i++){
+                    if(datapoints.poll.answers[i].answer === $( "#sel1" ).val()){
+                        datapoints.poll.answers[i].total++;
+                    }
+                }
+                }
             }
         </script>
 </body>
