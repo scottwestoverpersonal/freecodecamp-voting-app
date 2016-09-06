@@ -1,4 +1,4 @@
-# API Basejump: Build a Voting App (Work in progress)
+# API Basejump: Build a Voting App
 
 A NodeJS App that allows users to view polls, create polls, and vote on them. The app uses MongoDB for the database, and Stormpath User Management APIs.
 
