@@ -1,3 +1,7 @@
+# Important - Please Read
+
+Due to the Stormpath User API being shutdown, this app no longer works. It needs to be updated to use other authentication methods.
+
 # API Basejump: Build a Voting App
 
 A NodeJS App that allows users to view polls, create polls, and vote on them. The app uses MongoDB for the database, and Stormpath User Management APIs.
